@@ -87,5 +87,5 @@ On top of that, there could be an IP matching for the authentication token and t
 
 ### Additional suggestions
 
-It is a poor practice to pass parameters in a GET request if the master username and password has to be passed. Also the master username & password should never be passed. Instead, authentication token should be passed and authentication token should be validated for the requests instead of the master username and password. 
+It is a poor practice to pass parameters in a GET request if the master username and password has to be passed. Also the master username & password should never be passed. Instead, authentication token should be passed even if the POST method is used for the requests and authentication token should be validated for the requests instead of the master username and password. 
 
