@@ -18,6 +18,8 @@ The vulnerable backends return these datasets in JSON format so it is very easy 
 #### 1- Gain access
 In order to reproduce the vulnerability, an attacker has to have an access to a registered user on the system. The access to the portal is only provided to the people who owns a yellow cab and who is using the EN Taksi application (the main solution provider for the yellow cabs in Izmir, Turkey). An attacker could gain access by either finding a friend/relative who owns a yellow cab and has access to the system, or can brute-force since there is no re-captcha or similar application that blocks the automated requests and since the usernames are only at the form of 35TXXXX (where XXXX is a 4 digit number ranging from 5000 to 8000). Also most of the registered users use simple passwords like 123456 which makes the attackers job even easier.
 
+In my case I was checking the information for my father's car, and only then realized the information was being passed visible to the eye.
+
 #### 2- Send requests
 After having the access to the portal, user is greeted with a website where they can perform basic queries to get information about their cab. It is exactly at that point where an attacker can easily start data mining. First, a user can send a request for seeing the GPS data of their car, which sends a request to the website **https://portal.entaksi.com.tr** 
 
@@ -43,6 +45,8 @@ After sending initial non-modified requests, attacker could listen the network a
 As you can see from the request, the body part of the POST request already includes a username, which is **888** and a password which is **202CB962AC59075B964B07152D234B70**. And by noticing the length of the password an attacker can easily realize that it's a possible MD5 hash and try to decrypt and actually find that the password is **123** hashed in MD5 
 
 From now on, the attacker can modify the **plateNumber=35TXXXX** part for whatever plate number they would want to look up for (ranges from 5000 to 8000) and adjust the **starttime** and **endtime** for whatever time span they want.
+
+Plus, there are some parts on the website where the body part is actually passed as a GET request with plain password in sight. Which is even a larger security threat.
 
 #### 4- Response from the server
 
