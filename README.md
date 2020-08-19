@@ -52,7 +52,8 @@ Such request will return a JSON object with the following parameters and data;
     "errMsg":"",
     "data":[
     {"direction":XXX,"gpslat":"XXX","gpslng":"XXX","gpstime":"XXX","speed":XXX,"state":XXX,"time":"XXX},
-    {"direction":XXX,"gpslat":"XXX","gpslng":"XXX","gpstime":"XXX","speed":XXX,"state":XXX,"time":"XXX}]}
+    {"direction":XXX,"gpslat":"XXX","gpslng":"XXX","gpstime":"XXX","speed":XXX,"state":XXX,"time":"XXX}]
+    }
     
 #### 5- Possible attack scenarios
     
@@ -62,9 +63,25 @@ Since modifying the plateNumber, starttime and endtime parameters on the body pa
 
 ### Additional Discoveries
 
-Upon discovering the username and the password for the **https://portal.entaksi.com.tr** I have realized that one can easily gain access to the main portal and actually see all the information regarding any company that is operating under the EN Taksi platform. This is a huge vulnerability that could result in company losing a lot of money and especially leaking a lot of personal data of their clients. 
+Upon discovering the username and the password for the **https://portal.entaksi.com.tr** I have realized that one can easily gain access to the main portal and actually see all the information regarding any company that is operating under the EN Taksi platform. This is a huge vulnerability that could result in company losing a lot of money and especially leaking a lot of personal data of their clients. However, due to the national laws and regulations, accessing to that platform would be breaking the law so I haven't tried to do anything on that platform and stayed on the legal side. For that reason, it is unknown what one can exactly achieve with accessing to that platform.
 
 
---- 
+### How it was discovered?
 
-More information will be added soon.
+I was checking the network requests to find a way to download the GPS data for a yellow cab owned by my father. It was then I realized that the network request was being passed with username and password and URL in plain sight. I tried logging off from the website and checking the URL for my own yellow cab to actually see that the request still returned a valid data with no authentication. Later tried the same thing on a private browser on a different machine to verify the vulnerability was indeed there.
+
+### How could it be fixed?
+
+First of all, the main admin username and password must immediately change to something strong. Second of all, a recaptcha type of validation should be added for the main login area. Third, and most important of all, an authentication parameter should be added to each and every request on the website. 
+
+Upon initial login, if a user successfully signs up, an authentication token is given to the user, registered on their local machinese as a cookie. The same token, exact date & time & IP address & their username is also storred on a seperate database table. From then, the authentication token is added to all the forms' POST & GET fields. And on the backend, each form is first checked for authentication token verification. And if the authentication token is not a valid one, the server must return a response with error. If the authentication token is a valid one, the server must return the username & IP address for that authentication token internally. After that response, another script checks the user's main request to match the datafields with the username.
+
+For example above we have seen that modifying **plateNumber** variable allows possible attackers to download data for other usernames, a script that will check whether the authentication token is is registered for the plateNumber that is currently being requested or not. If the authentication token belongs to the same plate number as the user is requesting, then it will return a valid dataset response. However, if the user's authentication key's username doesn't match the one they are requesting from server, the request must be blocked. 
+
+On top of that, there could be an IP matching for the authentication token and the request for not allowing any authentication token sharing between users but it is optional.
+
+
+### Additional suggestions
+
+It is a poor practice to pass parameters in a GET request if the master username and password has to be passed. Also the master username & password should never be passed. Instead, authentication token should be passed and authentication token should be validated for the requests instead of the master username and password. 
+
