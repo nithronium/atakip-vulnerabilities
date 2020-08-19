@@ -1,5 +1,5 @@
 # atakip-vulnerabilities
-Proof of concept for vulnerabilities of Atakip.com website.
+Proof of concept for vulnerabilities of Atakip.com website. - 18 August 2020
 
 Atakip.com is a website that allows yellow cab owners to track their taxis' information online. The website provides GPS information for the cabs, their status, their speed, their earnings and information about the driver and owner of the cab. This repo includes proof of concept scripts for the vulnerabilities on the Atakip.com web address. 
 
@@ -87,5 +87,9 @@ On top of that, there could be an IP matching for the authentication token and t
 
 ### Additional suggestions
 
-It is a poor practice to pass parameters in a GET request if the master username and password has to be passed. Also the master username & password should never be passed. Instead, authentication token should be passed even if the POST method is used for the requests and authentication token should be validated for the requests instead of the master username and password. 
+It is a poor practice to pass parameters in a GET request if the master username and password has to be passed. Also the master username & password should never be passed. Instead, authentication token should be passed even if the POST method is used for the requests and authentication token should be validated for the requests instead of the master username and password.
+
+As for the master panel, an IP whitelist must be added in order to block logins from unknown IP addresses even if an attacker somehow manages to get the login information. 
+
+And in general, all users must have a time based limit for their request, for example at most 20 requests in any given minute to block the potential malicious requests being made to the server.
 
