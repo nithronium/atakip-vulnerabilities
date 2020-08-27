@@ -1,3 +1,7 @@
+## EDIT (27 August 2020)
+
+Further analysis showed that the website has fixed the previous bugs on the system however there are still problems which I have added below, under the vulnerabilities part. Also it is seen that the requests are still being passed with the master username (palpatine) and password (MD5 hash). However, this time the MD5 hash of the password can't be decoded because the password doesn't match any known password on the MD5 password lists.
+
 # atakip-vulnerabilities
 Proof of concept for vulnerabilities of Atakip.com website. - 18 August 2020
 
@@ -47,6 +51,14 @@ As you can see from the request, the body part of the POST request already inclu
 From now on, the attacker can modify the **plateNumber=35TXXXX** part for whatever plate number they would want to look up for (ranges from 5000 to 8000) and adjust the **starttime** and **endtime** for whatever time span they want.
 
 Plus, there are some parts on the website where the body part is actually passed as a GET request with plain password in sight. Which is even a larger security threat.
+
+##### August 27, 2020 Update
+
+Further analysis showed that the backend parses user data as plain text still, without using any authentication token. Here is one example;
+
+    https://atakip.com/wservice/AlphaWebService.asmx/getLicenceList?UserID=XXXX
+    
+By changing the XXXX part to a 4 digit number in the above URL, attacker can get information for that user. This request has to be passed with a POST parameter where an authentication token also be passed as a parameter so that any unauthenticated call made to the above URL will return an error instead of a plain data.
 
 #### 4- Response from the server
 
